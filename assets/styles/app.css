@@ -1,0 +1,35 @@
+
+
+    .dataTables_length, .dataTables_filter {
+        display: flex;
+        align-items: center;
+    }
+
+    .dataTables_filter label, .dataTables_length label {
+        margin-bottom: 0;
+        padding: 10px;
+        width: 100%;
+        display: flex;
+        gap: 5px;
+    }
+
+    .dataTables_filter input {
+        width: auto; 
+    }
+
+    .dataTables_length select {
+        width: auto; 
+    }
+
+
+
+.hide {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.interact-btn:hover .hide {
+    display: inline;
+    opacity: 1;
+}

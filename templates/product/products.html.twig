@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matériel - Liste produits{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" />
+{% endblock %}
+
+{% block javascripts %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+{% endblock %}
+
+{% block body %}
+
+
+<div class="example-wrapper">
+    <h1 class="text-center text-secondary">Liste des produits</h1>
+    <div class="d-flex justify-content-center m-3">
+        <a class="btn btn-outline-primary btn-lg" href="/addproduct"><i class="bi bi-plus-circle-fill"></i> Ajouter un nouveau produit</a>
+    </div>
+    
+    <table class="table align-middle my-3" id="product-table">
+        <thead>
+            <tr>
+                <th scope="col">Nom du produit</th>
+                <th scope="col">Prix HT</th>
+                <th scope="col">TVA</th>
+                <th scope="col">Prix TTC</th>
+                <th scope="col">Quantité</th>
+                <th scope="col">Date de création</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for materiel in materiels %}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-success interact-btn" data-bs-toggle="modal" data-bs-target="#modal-product-{{materiel.id}}">
+                        <i class="bi bi-search"></i> <span class="hide"> Voir</span>
+                    </button>
+                    {{materiel.nom}} 
+                </td>
+                <td>{{materiel.prixHT}}€</td>
+                <td>{{materiel.Tva.libelle}}</td>
+                <td>{{materiel.prixTTC}}€</td>
+                <td>
+                    <a href="/decrement/id={{materiel.id}}" class="btn btn-danger interact-btn">
+                        <i class="bi bi-dash-circle"></i> <span class="hide"> Décrémenter</span>
+                        
+                    </a>
+                    x{{materiel.quantite}}
+                </td>
+                <td>{{materiel.creationdate|date('d/m/Y')}}</td>
+            </tr>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modal-product-{{materiel.id}}" tabindex="-1" aria-labelledby="#ModalLabel-{{materiel.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 text-center" id="ModalLabel-{{materiel.id}}">{{materiel.nom}}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><em>{{materiel.description}}</em></p>
+                        <ul>
+                            <li>Quantité actuelle : x{{materiel.quantite}}</li>
+                            <li>Prix HT : {{materiel.prixHT}}€</li>
+                            <li>{{materiel.Tva.libelle}}</li>
+                            <li>Prix TTC : {{materiel.prixTTC}}€</li>
+                            <li>Date de création : {{materiel.creationdate|date('d/m/Y')}}</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <a href="/edit/product/id={{materiel.id}}" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Modifier le produit</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+{% block morescripts %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{# <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> #}
+
+<!-- DataTables JS --> 
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+{# <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script> #}
+
+<!-- DataTables Bootstrap JS -->
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Initialize DataTables with Bootstrap integration -->
+<script>
+    $(document).ready(function () {
+        if ($('#product-table').length) {
+            $('#product-table').DataTable({
+                paging: true,
+                responsive: true,
+                language: {
+                    search: "Rechercher un produit:",
+                    lengthMenu: "Afficher _MENU_ entrées",
+                    info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                    paginate: {
+                        first: "Première",
+                        last: "Dernière",
+                        next: "Suivante",
+                        previous: "Précédente"
+                    }
+                }
+            });
+        }
+    });
+
+</script>
+{% endblock %}

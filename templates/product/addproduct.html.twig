@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Matériel - Ajouter un produit{% endblock %}
+
+{% block body %}
+            <a href="/products" class="btn btn-primary mb-4"><i class="bi bi-arrow-left-circle-fill"></i> Retour à la liste des produits</a>
+
+    <div class="container d-flex flex-column justify-content-center">
+
+        <div class="bg-secondary bg-opacity-25 m-lg-3 p-3 rounded-3">
+
+            <h2>Ajouter un nouveau produit :</h2>
+            
+
+            {{ form_start(form)}}
+                {{ form_widget(form)}}
+
+                <button type="submit" class="btn btn-success rounded-3 mt-3">Valider l'ajout</button>
+            {{ form_end(form)}}
+
+
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block morescripts %}
+
+<script>
+    const HTprixInput = document.getElementById('materiel_form_prixHT');
+    const TTCprixInput = document.getElementById('materiel_form_prixTTC');
+    const TvaInput = document.getElementById('materiel_form_Tva');
+
+    function changeHTorTva() {
+        const selectedTvaOption = TvaInput.options[TvaInput.selectedIndex];
+        const tvaValue = parseFloat(selectedTvaOption.getAttribute('data-value'));
+        
+        const newTTC = HTprixInput.value * (1 + tvaValue);
+        TTCprixInput.value = newTTC.toFixed(2);
+    }
+
+    function changeTTC() {
+        const selectedTvaOption = TvaInput.options[TvaInput.selectedIndex];
+        const tvaValue = parseFloat(selectedTvaOption.getAttribute('data-value'));
+
+        const newHT = TTCprixInput.value / (1 + tvaValue);
+        HTprixInput.value = newHT.toFixed(2);
+    }
+
+   HTprixInput.addEventListener('input', changeHTorTva);
+   TvaInput.addEventListener('change', changeHTorTva);
+   TTCprixInput.addEventListener('input', changeTTC);
+</script>
+
+{% endblock %}
